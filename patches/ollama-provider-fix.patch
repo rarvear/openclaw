@@ -1,0 +1,11 @@
+--- a/src/agents/models-config.providers.implicit.ts
++++ b/src/agents/models-config.providers.implicit.ts
+@@ -33,7 +33,7 @@
+   Record<
+     string,
+     (params: { existing: ProviderConfig | undefined; implicit: ProviderConfig }) => ProviderConfig
+   >
+ > = {
+-  ollama: ({ implicit }) => implicit,
++  ollama: ({ existing, implicit }) => existing && existing.models && existing.models.length > 0 ? { ...implicit, ...existing } : implicit,
+ };

@@ -33,7 +33,7 @@ const PROVIDER_IMPLICIT_MERGERS: Partial<
     (params: { existing: ProviderConfig | undefined; implicit: ProviderConfig }) => ProviderConfig
   >
 > = {
-  ollama: ({ implicit }) => implicit,
+  ollama: ({ existing, implicit }) => existing && existing.models && existing.models.length > 0 ? { ...implicit, ...existing } : implicit,
 };
 
 const PLUGIN_DISCOVERY_ORDERS = ["simple", "profile", "paired", "late"] as const;

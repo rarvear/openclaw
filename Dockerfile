@@ -83,6 +83,16 @@ RUN set -eux; \
 
 COPY . .
 
+# Apply local patches before building (e.g. ollama provider fix)
+RUN if [ -d patches ] && [ -n "$(ls -A patches/*.patch 2>/dev/null)" ]; then \
+      echo "==> Applying patches..." && \
+      for p in patches/*.patch; do \
+        echo "Applying $p..." && \
+        (git apply --verbose "$p" 2>&1 || patch -p1 < "$p" || echo "WARNING: Failed to apply $p"); \
+      done; \
+    fi
+
+
 # Normalize extension paths now so runtime COPY preserves safe modes
 # without adding a second full extensions layer.
 RUN for dir in /app/${OPENCLAW_BUNDLED_PLUGIN_DIR} /app/.agent /app/.agents; do \
